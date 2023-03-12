@@ -45,6 +45,19 @@ You can publish the translations files with:
 php artisan vendor:publish --tag="filament-database-schedule-translations"
 ```
 
+Run the artisan command to run scheduled tasks
+```bash
+php artisan schedule:run
+```
+
+### Environment variables
+
+You can set the following environment variables to configure schedules:
+
+* SCHEDULE_TIMEZONE : The default is the same configured for the application, but if you need the schedules to run in a different timezone, it is possible to configure it with this variable
+* SCHEDULE_CACHE_DRIVER : The default is `file`
+* SCHEDULE_CACHE_ENABLE : The default is disabled when `APP_DEBUG=true` and enabled when `APP_DEBUG=false`
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
