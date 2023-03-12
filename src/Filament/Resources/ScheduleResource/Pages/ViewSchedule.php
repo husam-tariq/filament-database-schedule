@@ -75,17 +75,9 @@ class ViewSchedule extends Page implements HasTable
         ];
     }
 
-    protected function isTablePaginationEnabled(): bool
+   /*  protected function isTablePaginationEnabled(): bool
     {
         return false;
-    }
-    /*  protected function getForms(): array
-    {
-        return [
-            'form' => $this->makeForm()
-                ->context('view')
-                ->disabled()
-                ,
-        ];
     } */
+
 }

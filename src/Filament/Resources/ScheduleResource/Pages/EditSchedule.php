@@ -22,12 +22,30 @@ class EditSchedule extends EditRecord
         ];
     }
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     public $commands;
 
     public function mount($record): void
     {
         $this->commands = CommandService::get();
         parent::mount($record);
+    }
+
+    protected function getForms(): array
+    {
+        return [
+            'form' => $this->makeForm()
+                ->context('edit')
+                ->model($this->getRecord())
+                ->schema($this->getFormSchema())
+                   // ->columns(2)
+                ->statePath('data')
+                ->inlineLabel(false),
+        ];
     }
 
     protected function getFormSchema(): array
@@ -104,10 +122,6 @@ class EditSchedule extends EditRecord
         ];
     }
 
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        $data['params'] = $this->fixParams($data['params']);
-        return $data;
-    }
+
 
 }

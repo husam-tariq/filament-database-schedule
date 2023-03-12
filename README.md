@@ -1,13 +1,22 @@
-# Manage your Laravel Task Scheduling in a Filament interface and save schedules to the database.
+# Manage your Filament Task Scheduling in a Filament interface and save schedules to the database.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/husam-tariq/filament-database-schedule.svg?style=flat-square)](https://packagist.org/packages/husam-tariq/filament-database-schedule)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/husam-tariq/filament-database-schedule/run-tests?label=tests)](https://github.com/husam-tariq/filament-database-schedule/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/husam-tariq/filament-database-schedule/Check%20&%20fix%20styling?label=code%20style)](https://github.com/husam-tariq/filament-database-schedule/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/husam-tariq/filament-database-schedule.svg?style=flat-square)](https://packagist.org/packages/husam-tariq/filament-database-schedule)
 
 
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+![Filament Database Schedule](img/main.png)
+
+# Documentation
+
+This librarian creates a filament resource(default: /schedule) in your filament admin panel where it is possible to manage which 
+schedules will be executed at any given moment, these schedules are recorded in the database and can be changed, 
+activated, inactivated or deleted via your panel without the need for a new application deployment.
+
+## Create Schedules
+![Create Schedules](img/schedules_create.png)
+## Show History Schedules
+![Show History Schedules](img/history.png)
 
 ## Installation
 
@@ -17,7 +26,7 @@ You can install the package via composer:
 composer require husam-tariq/filament-database-schedule
 ```
 
-You can publish and run the migrations with:
+You should publish and run the migrations with:
 
 ```bash
 php artisan vendor:publish --tag="filament-database-schedule-migrations"
@@ -30,30 +39,10 @@ You can publish the config file with:
 php artisan vendor:publish --tag="filament-database-schedule-config"
 ```
 
-Optionally, you can publish the views using
+You can publish the translations files with:
 
 ```bash
-php artisan vendor:publish --tag="filament-database-schedule-views"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-## Usage
-
-```php
-$filament-database-schedule = new HusamTariq\FilamentDatabaseSchedule();
-echo $filament-database-schedule->echoPhrase('Hello, HusamTariq!');
-```
-
-## Testing
-
-```bash
-composer test
+php artisan vendor:publish --tag="filament-database-schedule-translations"
 ```
 
 ## Changelog

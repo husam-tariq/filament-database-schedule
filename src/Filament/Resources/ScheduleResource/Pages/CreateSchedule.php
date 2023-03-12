@@ -35,6 +35,12 @@ class CreateSchedule extends CreateRecord
                 ->inlineLabel(false),
         ];
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function getFormSchema(): array
     {
         return [
