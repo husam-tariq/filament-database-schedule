@@ -6,27 +6,19 @@ use HusamTariq\FilamentDatabaseSchedule\Http\Services\ScheduleService;
 use \Illuminate\Console\Scheduling\Schedule as BaseSchedule;
 use Illuminate\Support\Facades\Log;
 
-class Schedule
+class Schedule extends BaseSchedule
 {
-    /**
-     * @var BaseSchedule
-     */
-    private $schedule;
-
-    private $tasks;
-
-    public function __construct(ScheduleService $scheduleService, BaseSchedule $schedule)
+    public function dueEvents($app)
     {
-        $this->tasks = $scheduleService->getActives();
-        $this->schedule = $schedule;
-    }
+        $this->events = [];
+        $model = $app->make(config('filament-database-schedule.model'));
 
-    public function execute()
-    {
-        foreach ($this->tasks as $task) {
+        foreach ($model->active()->get() as $task) {
             $this->dispatch($task);
         }
+        return parent::dueEvents($app);
     }
+
 
     /**
      * @throws \Exception
@@ -38,10 +30,10 @@ class Schedule
             // @var Event $event
             if ($task->command === 'custom') {
                 $command = $task->command_custom;
-                $event = $this->schedule->exec($command);
+                $event = $this->exec($command);
             } else {
                 $command = $task->command;
-                $event = $this->schedule->command(
+                $event = $this->command(
                     $command,
                     array_values($task->getArguments()) + $task->getOptions()
                 );
@@ -52,7 +44,7 @@ class Schedule
             $event->storeOutput();
 
             if ($task->environments) {
-                $event->environments(explode(',', $task->environments));
+                $event->environments($task->environments);
             }
 
             if ($task->even_in_maintenance_mode) {
