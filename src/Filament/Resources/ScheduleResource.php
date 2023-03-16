@@ -107,34 +107,36 @@ class ScheduleResource extends Resource
                         ->rules([new Corn()])
                         ->label(__('filament-database-schedule::schedule.fields.expression'))
                         ->required()->helperText(fn () => config('filament-database-schedule.tool-help-cron-expression.enable') ? new HtmlString(" <a href='" . config('filament-database-schedule.tool-help-cron-expression.url') . "' target='_blank'>" . __('filament-database-schedule::schedule.messages.help-cron-expression') . " </a>") : null),
-                    Forms\Components\TagsInput::make('environments')
+                 /*    Forms\Components\TagsInput::make('environments')
                         ->placeholder(null)
-                        ->label(__('filament-database-schedule::schedule.fields.environments')),
-                    Forms\Components\TextInput::make('log_filename')
+                        ->label(__('filament-database-schedule::schedule.fields.environments')), */
+                  /*   Forms\Components\TextInput::make('log_filename')
                         ->label(__('filament-database-schedule::schedule.fields.log_filename'))
-                        ->helperText(__('filament-database-schedule::schedule.messages.help-log-filename')),
-                    Forms\Components\TextInput::make('webhook_before')
+                        ->helperText(__('filament-database-schedule::schedule.messages.help-log-filename')), */
+                   /*  Forms\Components\TextInput::make('webhook_before')
                         ->label(__('filament-database-schedule::schedule.fields.webhook_before')),
                     Forms\Components\TextInput::make('webhook_after')
-                        ->label(__('filament-database-schedule::schedule.fields.webhook_after')),
+                        ->label(__('filament-database-schedule::schedule.fields.webhook_after')), */
                     Forms\Components\TextInput::make('email_output')
                         ->label(__('filament-database-schedule::schedule.fields.email_output')),
                     Forms\Components\Toggle::make('sendmail_success')
                         ->label(__('filament-database-schedule::schedule.fields.sendmail_success')),
                     Forms\Components\Toggle::make('sendmail_error')
                         ->label(__('filament-database-schedule::schedule.fields.sendmail_error')),
-                    Forms\Components\Toggle::make('log_success')
+              /*       Forms\Components\Toggle::make('log_success')
                         ->label(__('filament-database-schedule::schedule.fields.log_success'))->default(true),
                     Forms\Components\Toggle::make('log_error')
-                        ->label(__('filament-database-schedule::schedule.fields.log_error'))->default(true),
-                    Forms\Components\Toggle::make('even_in_maintenance_mode')
-                        ->label(__('filament-database-schedule::schedule.fields.even_in_maintenance_mode')),
-                    Forms\Components\Toggle::make('without_overlapping')
-                        ->label(__('filament-database-schedule::schedule.fields.without_overlapping')),
-                    Forms\Components\Toggle::make('on_one_server')
-                        ->label(__('filament-database-schedule::schedule.fields.on_one_server')),
-                    Forms\Components\Toggle::make('run_in_background')
-                        ->label(__('filament-database-schedule::schedule.fields.run_in_background')),
+                        ->label(__('filament-database-schedule::schedule.fields.log_error'))->default(true), */
+                        Forms\Components\Hidden::make('log_success')->default(true),
+                        Forms\Components\Hidden::make('log_error')->default(true),
+                 /*    Forms\Components\Toggle::make('even_in_maintenance_mode')
+                        ->label(__('filament-database-schedule::schedule.fields.even_in_maintenance_mode')), */
+                  /*   Forms\Components\Toggle::make('without_overlapping')
+                        ->label(__('filament-database-schedule::schedule.fields.without_overlapping')), */
+                  /*   Forms\Components\Toggle::make('on_one_server')
+                        ->label(__('filament-database-schedule::schedule.fields.on_one_server')), */
+                /*     Forms\Components\Toggle::make('run_in_background')
+                        ->label(__('filament-database-schedule::schedule.fields.run_in_background')), */
                 ])->inlineLabel(false)
             ]);
     }
@@ -151,7 +153,7 @@ class ScheduleResource extends Resource
                 ScheduleArguments::make('params')->label(__('filament-database-schedule::schedule.fields.arguments'))->searchable()->sortable(),
                 ScheduleOptions::make('options')->label(__('filament-database-schedule::schedule.fields.options'))->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('expression')->label(__('filament-database-schedule::schedule.fields.expression'))->searchable()->sortable(),
-                Tables\Columns\TagsColumn::make('environments')->label(__('filament-database-schedule::schedule.fields.environments'))->separator(',')->searchable()->sortable(),
+              //  Tables\Columns\TagsColumn::make('environments')->label(__('filament-database-schedule::schedule.fields.environments'))->separator(',')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('created_at')->label(__('filament-database-schedule::schedule.fields.created_at'))->searchable()->sortable()
                     ->dateTime()->wrap(),
                 Tables\Columns\TextColumn::make('updated_at')->getStateUsing(fn ($record) => $record->created_at == $record->updated_at ? __('filament-database-schedule::schedule.fields.never') : $record->updated_at)

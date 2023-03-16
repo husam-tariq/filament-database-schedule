@@ -12,7 +12,7 @@ class CommandService
         $commands = collect(app(Kernel::class)->all())->sortKeys();
         $commandsKeys = $commands->keys()->toArray();
         foreach (config('filament-database-schedule.commands.exclude') as $exclude) {
-            $commandsKeys = preg_grep("/^$exclude/", $commandsKeys, PREG_GREP_INVERT);
+            $commandsKeys = preg_grep("/^$exclude/", $commandsKeys);
         }
         return $commands->only($commandsKeys)
             ->map(function ($command) {
