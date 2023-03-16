@@ -43,7 +43,11 @@ class Schedule extends BaseSchedule
             //ensure output is being captured to write history
             $event->storeOutput();
 
+<<<<<<< HEAD
             if ($task->environments) {
+=======
+            if (!empty($task->environments)) {
+>>>>>>> main
                 $event->environments($task->environments);
             }
 
