@@ -20,7 +20,7 @@ class CommandService
                     'name' => $command->getName(),
                     'description' => $command->getDescription(),
                     'signature' => $command->getSynopsis(),
-                    'full_name' =>$command->getName().' - '.$command->getDescription(),
+                    'full_name' =>$command->getName().' ('.$command->getDescription().")",
                     'arguments' => static::getArguments($command),
                     'options' => static::getOptions($command),
                 ];
