@@ -41,9 +41,6 @@ class FilamentDatabaseScheduleServiceProvider extends PluginServiceProvider
     //     'plugin-filament-database-schedule' => __DIR__ . '/../resources/dist/filament-database-schedule.js',
     // ];
 
-
-
-
     public function register()
     {
         $this->callAfterResolving(Factory::class, function (Factory $factory) {
@@ -55,17 +52,14 @@ class FilamentDatabaseScheduleServiceProvider extends PluginServiceProvider
         parent::register();
     }
 
-
-
     public function boot()
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../resources/svg' => public_path('vendor/' . static::$name),
             ], static::$name);
-        }
+        }        
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-
         $this->publishes([
             __DIR__ . '/../database/migrations/' => database_path('migrations'),
         ], 'filament-database-schedule-migrations');
@@ -74,18 +68,21 @@ class FilamentDatabaseScheduleServiceProvider extends PluginServiceProvider
         $model = $config->get('filament-database-schedule.model');
         $model::observe(ScheduleObserver::class);
 
-        $this->app->resolving(BaseSchedule::class, function ($schedule) {
-            $schedule = app(Schedule::class, ['schedule' => $schedule]);
-            return $schedule->execute();
-        });
+        if (Schema::hasTable($config->get('filament-database-schedule.table.schedules', 'schedules'))) {
+            $this->app->resolving(BaseSchedule::class, function ($schedule) {
+                $schedule = app(Schedule::class, ['schedule' => $schedule]);
+                return $schedule->execute();
+            });
+        }
 
         $this->commands([
             TestJobCommand::class,
             PhpUnitTestJobCommand::class,
             ScheduleClearCacheCommand::class,
-        ]);
+        ]);        
         parent::boot();
     }
+    
     public function configurePackage(Package $package): void
     {
         $package
