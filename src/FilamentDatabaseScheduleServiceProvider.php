@@ -8,6 +8,7 @@ use HusamTariq\FilamentDatabaseSchedule\Console\Commands\PhpUnitTestJobCommand;
 use HusamTariq\FilamentDatabaseSchedule\Console\Commands\ScheduleClearCacheCommand;
 use HusamTariq\FilamentDatabaseSchedule\Console\Commands\TestJobCommand;
 use HusamTariq\FilamentDatabaseSchedule\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Schema;
 use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource;
 use HusamTariq\FilamentDatabaseSchedule\Observer\ScheduleObserver;
 use Spatie\LaravelPackageTools\Package;
