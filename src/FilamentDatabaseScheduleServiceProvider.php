@@ -69,12 +69,14 @@ class FilamentDatabaseScheduleServiceProvider extends PluginServiceProvider
         $model = $config->get('filament-database-schedule.model');
         $model::observe(ScheduleObserver::class);
 
-        if (Schema::hasTable($config->get('filament-database-schedule.table.schedules', 'schedules'))) {
-            $this->app->resolving(BaseSchedule::class, function ($schedule) {
-                $schedule = app(Schedule::class, ['schedule' => $schedule]);
-                return $schedule->execute();
-            });
-        }
+        try {
+            if (Schema::hasTable($config->get('filament-database-schedule.table.schedules', 'schedules'))) {
+                $this->app->resolving(BaseSchedule::class, function ($schedule) {
+                    $schedule = app(Schedule::class, ['schedule' => $schedule]);
+                    return $schedule->execute();
+                });
+            }
+        } catch (\Exception $e) {}
 
         $this->commands([
             TestJobCommand::class,
