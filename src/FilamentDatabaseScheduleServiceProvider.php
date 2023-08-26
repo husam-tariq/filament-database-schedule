@@ -41,9 +41,6 @@ class FilamentDatabaseScheduleServiceProvider extends PluginServiceProvider
     //     'plugin-filament-database-schedule' => __DIR__ . '/../resources/dist/filament-database-schedule.js',
     // ];
 
-
-
-
     public function register()
     {
         $this->callAfterResolving(Factory::class, function (Factory $factory) {
@@ -55,8 +52,6 @@ class FilamentDatabaseScheduleServiceProvider extends PluginServiceProvider
         parent::register();
     }
 
-
-
     public function boot()
     {
         if ($this->app->runningInConsole()) {
@@ -65,7 +60,6 @@ class FilamentDatabaseScheduleServiceProvider extends PluginServiceProvider
             ], static::$name);
         }
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-
         $this->publishes([
             __DIR__ . '/../database/migrations/' => database_path('migrations'),
         ], 'filament-database-schedule-migrations');
@@ -90,6 +84,7 @@ class FilamentDatabaseScheduleServiceProvider extends PluginServiceProvider
         ]);
         parent::boot();
     }
+
     public function configurePackage(Package $package): void
     {
         $package
