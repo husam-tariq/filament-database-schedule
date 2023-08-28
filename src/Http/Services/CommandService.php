@@ -11,16 +11,23 @@ class CommandService
     {
         $commands = collect(app(Kernel::class)->all())->sortKeys();
         $commandsKeys = $commands->keys()->toArray();
-        foreach (config('filament-database-schedule.commands.exclude') as $exclude) {
-            $commandsKeys = preg_grep("/^$exclude/", $commandsKeys, PREG_GREP_INVERT);
+        if(config('filament-database-schedule.commands.show_supported_only')){
+            foreach (config('filament-database-schedule.commands.supported') as $supported) {
+                $commandsKeys = preg_grep("/^$supported/", $commandsKeys);
+            }
+        }else{
+            foreach (config('filament-database-schedule.commands.exclude') as $exclude) {
+                $commandsKeys = preg_grep("/^$exclude/", $commandsKeys, PREG_GREP_INVERT);
+            }
         }
+
         return $commands->only($commandsKeys)
             ->map(function ($command) {
                 return [
                     'name' => $command->getName(),
                     'description' => $command->getDescription(),
                     'signature' => $command->getSynopsis(),
-                    'full_name' =>$command->getName().' - '.$command->getDescription(),
+                    'full_name' =>$command->getName().' ('.$command->getDescription().")",
                     'arguments' => static::getArguments($command),
                     'options' => static::getOptions($command),
                 ];
