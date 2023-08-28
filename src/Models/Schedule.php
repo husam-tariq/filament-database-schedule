@@ -108,19 +108,19 @@ class Schedule extends Model
 
     public function getOptions(): array
     {
-        $options = $this->options ?? [];
-        $options_with_value = $this->options_with_value[0] ?? [];
-        if (!empty($options_with_value))
-            array_push($options, $options_with_value);
+        $options = collect($this->options ?? []);
 
-        return collect($options)->map(function ($value, $key) {
-            if (!is_array($value) || isset($value['value'])) {
+        $options_with_value = $this->options_with_value ?? [];
+        if (!empty($options_with_value))
+        $options = $options->merge($options_with_value);
+        return $options->map(function ($value, $key) {
+
                 if (is_array($value)) {
                     return "--" . ($value['name']??$key) . "=" . $value['value'];
                 } else {
                     return "--$value";
                 }
-            }
+
         })->toArray();
     }
 

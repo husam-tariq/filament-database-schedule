@@ -19,6 +19,7 @@ use HusamTariq\FilamentDatabaseSchedule\Filament\Columns\ScheduleOptions;
 use HusamTariq\FilamentDatabaseSchedule\Http\Services\CommandService;
 use HusamTariq\FilamentDatabaseSchedule\Rules\Corn;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
@@ -153,7 +154,7 @@ class ScheduleResource extends Resource
                     return $record->command;
                 })->label(__('filament-database-schedule::schedule.fields.command'))->searchable()->sortable(),
                 ScheduleArguments::make('params')->label(__('filament-database-schedule::schedule.fields.arguments'))->searchable()->sortable(),
-                ScheduleOptions::make('options')->label(__('filament-database-schedule::schedule.fields.options'))->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('options')->label(__('filament-database-schedule::schedule.fields.options'))->searchable()->sortable()->getStateUsing(fn(Model $record)=>$record->getOptions())->separator(',')->badge(),
                 Tables\Columns\TextColumn::make('expression')->label(__('filament-database-schedule::schedule.fields.expression'))->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('environments')->label(__('filament-database-schedule::schedule.fields.environments'))->separator(',')->searchable()->sortable()->badge()->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('status')->formatStateUsing(static function ($state): ?string {

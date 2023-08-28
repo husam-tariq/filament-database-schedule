@@ -2,9 +2,9 @@
 
 namespace HusamTariq\FilamentDatabaseSchedule\Filament\Columns;
 
-use Filament\Tables\Columns\TagsColumn;
+use Filament\Tables\Columns\TextColumn;
 
-class ScheduleOptions extends TagsColumn
+class ScheduleOptions extends TextColumn
 {
 
     protected bool $withValue = true;
