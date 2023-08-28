@@ -37,6 +37,11 @@ return [
     'default_ordering_direction' => 'DESC',
 
     /**
+     * Resource navigation icon
+     */
+    "navigation_icon" => 'heroicon-o-rectangle-stack',
+
+    /**
      * How many jobs do you want to have on each page ?
      */
     'per_page' => 10,
@@ -82,12 +87,12 @@ return [
             'view:*',
             'phpunit:*'
         ],
-         /**
+        /**
          * Alternatively, you can set the "show_supported_only" parameter to true to only allow commands
          * that are in the supported list.
          */
-        "show_supported_only" =>false,
-        "supported" =>[
+        "show_supported_only" => false,
+        "supported" => [
             //ex."erp:*"
         ],
     ],

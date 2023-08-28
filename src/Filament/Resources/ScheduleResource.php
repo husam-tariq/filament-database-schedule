@@ -36,6 +36,11 @@ class ScheduleResource extends Resource
         return  config('filament-database-schedule.model');
     }
 
+    public static function getNavigationIcon(): ?string
+    {
+        return config('filament-database-schedule.navigation_icon');
+    }
+
     public static function getPluralModelLabel(): string
     {
         return __('filament-database-schedule::schedule.resource.plural');
