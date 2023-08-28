@@ -50,6 +50,25 @@ Run the artisan command to run scheduled tasks
 php artisan schedule:run
 ```
 
+### Plugin Usage
+Using the plugin is easy all you need to do is instanciate it to the Panels you want the plugin to be available in.
+
+```php
+use HusamTariq\FilamentDatabaseSchedule\FilamentDatabaseSchedulePlugin;
+
+
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ...
+        ->plugins([
+           FilamentDatabaseSchedulePlugin::make()
+        ])
+        ...
+}
+```
+
 ### Environment variables
 
 You can set the following environment variables to configure schedules:
