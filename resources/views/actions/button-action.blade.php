@@ -1,10 +1,12 @@
-<x-tables::actions.action
-    :action="$action"
-    component="filament-database-schedule::button"
-    :outlined="$isOutlined()"
-    :icon-position="$getIconPosition()"
-    class="filament-tables-button-action"
->
 
+<x-filament-actions::action
+    :action="$action"
+    dynamic-component="filament-database-schedule::button"
+    :outlined="$isOutlined()"
+    :labeled-from="$getLabeledFromBreakpoint()"
+    :icon-position="$getIconPosition()"
+    :icon-size="$getIconSize()"
+    class="fi-ac-btn-action"
+>
     {{ $getLabel() }}
-</x-tables::actions.action>
+</x-filament-actions::action>

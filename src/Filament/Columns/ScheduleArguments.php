@@ -2,11 +2,12 @@
 
 namespace HusamTariq\FilamentDatabaseSchedule\Filament\Columns;
 
-use Filament\Tables\Columns\TagsColumn;
 
-class ScheduleArguments extends TagsColumn
+use Filament\Tables\Columns\TextColumn;
+
+class ScheduleArguments extends TextColumn
 {
- //   protected string $view = 'filament-database-schedule::columns.schedule-arguments';
+    protected string $view = 'filament-database-schedule::columns.schedule-arguments';
 
   protected bool $withValue = true;
 
@@ -38,7 +39,7 @@ class ScheduleArguments extends TagsColumn
       if (count($tags) === 1 && blank($tags[0])) {
           $tags = [];
       }
-
+dd($tags);
       return $tags;
   }
 }

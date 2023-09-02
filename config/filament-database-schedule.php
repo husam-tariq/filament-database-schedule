@@ -81,8 +81,17 @@ return [
             'schedule:*',
             'view:*',
             'phpunit:*'
-        ]
+        ],
+         /**
+         * Alternatively, you can set the "show_supported_only" parameter to true to only allow commands
+         * that are in the supported list.
+         */
+        "show_supported_only" =>false,
+        "supported" =>[
+            //ex."erp:*"
+        ],
     ],
+
 
     'tool-help-cron-expression' => [
         'enable' => true,
