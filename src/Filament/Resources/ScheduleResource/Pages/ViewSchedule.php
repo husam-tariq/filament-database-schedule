@@ -7,7 +7,7 @@ use Filament\Tables;
 use Filament\Forms;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Pages\Concerns\HasRelationManagers;
-use Filament\Resources\Pages\Concerns\HasTabs;
+use Filament\Resources\Concerns\HasTabs;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Livewire\Attributes\Url;
 
