@@ -7,6 +7,7 @@ use Filament\Tables;
 use Filament\Forms;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Pages\Concerns\HasRelationManagers;
+use Filament\Resources\Pages\Concerns\HasTabs;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Livewire\Attributes\Url;
 
@@ -23,6 +24,7 @@ class ViewSchedule extends Page implements HasTable
     protected static string $view = 'filament-panels::resources.pages.list-records';
     use InteractsWithRecord;
     use HasRelationManagers;
+    use HasTabs;
 
     #[Url]
     public ?string $activeTab = null;
