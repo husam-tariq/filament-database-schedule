@@ -72,7 +72,7 @@ class ViewSchedule extends Page implements HasTable
         return [
             Tables\Columns\Layout\Split::make([
                 Tables\Columns\TextColumn::make('command')->label(__('filament-database-schedule::schedule.fields.command')),
-                // ScheduleArguments::make('params')->withValue(false)->label(__('filament-database-schedule::schedule.fields.arguments'))->separator(',')->badge(),
+                ScheduleArguments::make('params')->withValue(false)->label(__('filament-database-schedule::schedule.fields.arguments'))->separator(',')->badge(),
                 Tables\Columns\TextColumn::make('options')->label(__('filament-database-schedule::schedule.fields.options'))->separator(',')->badge(),
                 Tables\Columns\TextColumn::make('created_at')->label(__('filament-database-schedule::schedule.fields.expression'))
                     ->dateTime(),
