@@ -42,6 +42,11 @@ return [
     "navigation_icon" => 'heroicon-o-rectangle-stack',
 
     /**
+     * When opening history, is output collapsed
+     */
+    'history_collapsed' => env('FILAMENT_SCHEDULE_HISTORY_COLLAPSED', false),
+
+    /**
      * How many jobs do you want to have on each page ?
      */
     'per_page' => 10,

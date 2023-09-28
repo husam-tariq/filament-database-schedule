@@ -28,13 +28,7 @@ class ViewSchedule extends Page implements HasTable
 
     #[Url]
     public ?string $activeTab = null;
-    /**
-     * @return array<string | int, Tab>
-     */
-    public function getTabs(): array
-    {
-        return [];
-    }
+   
     use Forms\Concerns\InteractsWithForms;
     use Tables\Concerns\InteractsWithTable {
         makeTable as makeBaseTable;
@@ -78,7 +72,7 @@ class ViewSchedule extends Page implements HasTable
         return [
             Tables\Columns\Layout\Split::make([
                 Tables\Columns\TextColumn::make('command')->label(__('filament-database-schedule::schedule.fields.command')),
-                ScheduleArguments::make('params')->withValue(false)->label(__('filament-database-schedule::schedule.fields.arguments'))->separator(',')->badge(),
+                // ScheduleArguments::make('params')->withValue(false)->label(__('filament-database-schedule::schedule.fields.arguments'))->separator(',')->badge(),
                 Tables\Columns\TextColumn::make('options')->label(__('filament-database-schedule::schedule.fields.options'))->separator(',')->badge(),
                 Tables\Columns\TextColumn::make('created_at')->label(__('filament-database-schedule::schedule.fields.expression'))
                     ->dateTime(),
@@ -87,7 +81,7 @@ class ViewSchedule extends Page implements HasTable
                 Tables\Columns\TextColumn::make('output')->extraAttributes(["class"=>"!max-w-max"],true),
 
 
-            ])->collapsible(),
+            ])->collapsible()->collapsed(config("filament-database-schedule.history_collapsed")),
 
         ];
     }
