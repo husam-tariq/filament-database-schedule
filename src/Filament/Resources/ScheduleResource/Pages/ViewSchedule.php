@@ -33,13 +33,6 @@ class ViewSchedule extends Page implements HasTable
     {
         return [];
     }
-
-    public function getCachedTabs(): array
-    {
-        return [];
-    }
-
-
     use Forms\Concerns\InteractsWithForms;
     use Tables\Concerns\InteractsWithTable {
         makeTable as makeBaseTable;
