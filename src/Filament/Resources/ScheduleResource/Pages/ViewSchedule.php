@@ -7,6 +7,7 @@ use Filament\Tables;
 use Filament\Forms;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Pages\Concerns\HasRelationManagers;
+use Filament\Resources\Concerns\HasTabs;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Livewire\Attributes\Url;
 
@@ -23,16 +24,11 @@ class ViewSchedule extends Page implements HasTable
     protected static string $view = 'filament-panels::resources.pages.list-records';
     use InteractsWithRecord;
     use HasRelationManagers;
+    use HasTabs;
 
     #[Url]
     public ?string $activeTab = null;
-    /**
-     * @return array<string | int, Tab>
-     */
-    public function getTabs(): array
-    {
-        return [];
-    }
+   
     use Forms\Concerns\InteractsWithForms;
     use Tables\Concerns\InteractsWithTable {
         makeTable as makeBaseTable;
@@ -85,7 +81,7 @@ class ViewSchedule extends Page implements HasTable
                 Tables\Columns\TextColumn::make('output')->extraAttributes(["class"=>"!max-w-max"],true),
 
 
-            ])->collapsible(),
+            ])->collapsible()->collapsed(config("filament-database-schedule.history_collapsed")),
 
         ];
     }

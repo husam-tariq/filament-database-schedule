@@ -39,7 +39,6 @@ class ScheduleArguments extends TextColumn
       if (count($tags) === 1 && blank($tags[0])) {
           $tags = [];
       }
-dd($tags);
       return $tags;
   }
 }
