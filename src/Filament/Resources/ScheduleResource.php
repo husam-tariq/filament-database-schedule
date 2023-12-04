@@ -175,7 +175,7 @@ class ScheduleResource extends Resource
                             return $state;
                     }
                 })->icons([
-                        'heroicon-o-x',
+                        'heroicon-o-x-mark',
                         'heroicon-o-document' => Schedule::STATUS_INACTIVE,
                         'heroicon-o-x-circle' => Schedule::STATUS_TRASHED,
                         'heroicon-o-check-circle' => Schedule::STATUS_ACTIVE,
