@@ -2,6 +2,7 @@
 
 namespace HusamTariq\FilamentDatabaseSchedule\Observer;
 
+use HusamTariq\FilamentDatabaseSchedule\Enums\Status;
 use HusamTariq\FilamentDatabaseSchedule\Http\Services\ScheduleService;
 use HusamTariq\FilamentDatabaseSchedule\Models\Schedule;
 
@@ -20,14 +21,14 @@ class ScheduleObserver
     public function deleted(Schedule $schedule)
     {
 
-        $schedule->status = Schedule::STATUS_TRASHED;
+        $schedule->status = Status::Trashed;
         $schedule->saveQuietly();
         $this->clearCache();
     }
 
     public function restored(Schedule $schedule)
     {
-        $schedule->status = Schedule::STATUS_INACTIVE;
+        $schedule->status = Status::Inactive;
         $schedule->saveQuietly();
     }
 

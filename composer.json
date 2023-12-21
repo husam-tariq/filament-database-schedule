@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "awcodes/filament-table-repeater": "^2.0.4",
         "filament/filament": "^3.0.47",
         "spatie/laravel-package-tools": "^1.13.5",

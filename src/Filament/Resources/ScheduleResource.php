@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Table;
+use HusamTariq\FilamentDatabaseSchedule\Enums\Status;
 use HusamTariq\FilamentDatabaseSchedule\Filament\Columns\ActionGroup;
 use HusamTariq\FilamentDatabaseSchedule\Filament\Columns\ScheduleArguments;
 use HusamTariq\FilamentDatabaseSchedule\Filament\Columns\ScheduleOptions;
@@ -157,34 +158,11 @@ class ScheduleResource extends Resource
                 Tables\Columns\TextColumn::make('options')->label(__('filament-database-schedule::schedule.fields.options'))->searchable()->sortable()->getStateUsing(fn(Model $record)=>$record->getOptions())->separator(',')->badge(),
                 Tables\Columns\TextColumn::make('expression')->label(__('filament-database-schedule::schedule.fields.expression'))->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('environments')->label(__('filament-database-schedule::schedule.fields.environments'))->separator(',')->searchable()->sortable()->badge()->toggleable(isToggledHiddenByDefault: false),
-                Tables\Columns\TextColumn::make('status')->formatStateUsing(static function ($state): ?string {
-                    switch ($state) {
-                        case Schedule::STATUS_INACTIVE:
-                            return __('filament-database-schedule::schedule.status.inactive');
-                            break;
-
-                        case Schedule::STATUS_TRASHED:
-                            return  __('filament-database-schedule::schedule.status.trashed');
-                            break;
-
-                        case Schedule::STATUS_ACTIVE:
-                            return  __('filament-database-schedule::schedule.status.active');
-                            break;
-
-                        default:
-                            return $state;
-                    }
-                })->icons([
-                        'heroicon-o-x-mark',
-                        'heroicon-o-document' => Schedule::STATUS_INACTIVE,
-                        'heroicon-o-x-circle' => Schedule::STATUS_TRASHED,
-                        'heroicon-o-check-circle' => Schedule::STATUS_ACTIVE,
-                    ])
-                    ->colors([
-                        'warning' => Schedule::STATUS_INACTIVE,
-                        'success' => Schedule::STATUS_ACTIVE,
-                        'danger' => Schedule::STATUS_TRASHED,
-                    ])->label(__('filament-database-schedule::schedule.fields.status'))->searchable()->sortable()->toggleable(isToggledHiddenByDefault: false),
+                Tables\Columns\TextColumn::make('status')
+                    ->label(__('filament-database-schedule::schedule.fields.status'))
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('created_at')->label(__('filament-database-schedule::schedule.fields.created_at'))->searchable()->sortable()
                     ->dateTime()->wrap()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->getStateUsing(fn ($record) => $record->created_at == $record->updated_at ? __('filament-database-schedule::schedule.fields.never') : $record->updated_at)
@@ -211,14 +189,17 @@ class ScheduleResource extends Resource
                     Tables\Actions\RestoreAction::make()->tooltip(__('filament-actions::restore.single.label')),
                     Tables\Actions\DeleteAction::make()->tooltip(__('filament-actions::delete.single.label')),
                     Tables\Actions\ForceDeleteAction::make()->tooltip(__('filament-support::actions/force-delete.single.label')),
-                    Tables\Actions\Action::make('toggle')->disabled(fn ($record) => $record->trashed())
-                        ->icon(fn ($record) => $record->status == Schedule::STATUS_ACTIVE ? 'schedule-pause-fill' : 'schedule-play-fill')->color(fn ($record) => $record->status == Schedule::STATUS_ACTIVE ? 'warning' : 'success')->action(function ($record): void {
-                            if ($record->status == Schedule::STATUS_ACTIVE)
-                                $record->status = Schedule::STATUS_INACTIVE;
-                            else if ($record->status == Schedule::STATUS_INACTIVE)
-                                $record->status = Schedule::STATUS_ACTIVE;
+                    Tables\Actions\Action::make('toggle')
+                        ->disabled(fn ($record) => $record->trashed())
+                        ->icon(fn ($record) => $record->status === Status::Active ? 'schedule-pause-fill' : 'schedule-play-fill')
+                        ->color(fn ($record) => $record->status === Status::Active ? 'warning' : 'success')
+                        ->action(function ($record): void {
+                            if ($record->status === Status::Active)
+                                $record->status = Status::Inactive;
+                            else if ($record->status === Status::Inactive)
+                                $record->status = Status::Active;
                             $record->save();
-                        })->tooltip(fn ($record) => $record->status == Schedule::STATUS_ACTIVE ? __('filament-database-schedule::schedule.buttons.inactivate') : __('filament-database-schedule::schedule.buttons.activate')),
+                        })->tooltip(fn ($record) => $record->status === Status::Active ? __('filament-database-schedule::schedule.buttons.inactivate') : __('filament-database-schedule::schedule.buttons.activate')),
                     Tables\Actions\ViewAction::make()->icon('schedule-history')->color('gray')->tooltip(__('filament-database-schedule::schedule.buttons.history')),
                 ])
 

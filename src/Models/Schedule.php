@@ -2,6 +2,7 @@
 
 namespace HusamTariq\FilamentDatabaseSchedule\Models;
 
+use HusamTariq\FilamentDatabaseSchedule\Enums\Status;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,10 +12,6 @@ class Schedule extends Model
 {
     use ManagesFrequencies;
     use SoftDeletes;
-
-    public const STATUS_INACTIVE = 0;
-    public const STATUS_ACTIVE = 1;
-    public const STATUS_TRASHED = 2;
 
     /**
      * The database table used by the model.
@@ -58,6 +55,7 @@ class Schedule extends Model
         'options' => 'array',
         'options_with_value' => 'array',
         'environments' => 'array',
+        'status' => Status::class,
     ];
 
     /**
@@ -80,12 +78,12 @@ class Schedule extends Model
 
     public function scopeInactive($query)
     {
-        return $query->where('status', false);
+        return $query->where('status', Status::Inactive);
     }
 
     public function scopeActive($query)
     {
-        return $query->where('status', true);
+        return $query->where('status', Status::Active);
     }
 
     public function getArguments(): array
