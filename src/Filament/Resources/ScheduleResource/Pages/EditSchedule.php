@@ -3,7 +3,7 @@
 namespace HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource\Pages;
 
 use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource;
-use Filament\Pages\Actions;
+use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Validation\ValidationException;

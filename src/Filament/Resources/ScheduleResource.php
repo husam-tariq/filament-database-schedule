@@ -8,7 +8,7 @@ use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource\Page
 use HusamTariq\FilamentDatabaseSchedule\Models\Schedule;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Section;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\Column;
@@ -67,7 +67,7 @@ class ScheduleResource extends Resource
         static::$commands = CommandService::get();
         return $form
             ->schema([
-                Card::make([
+                Section::make([
                     Forms\Components\Select::make('command')->label(__('filament-database-schedule::schedule.fields.command'))
                         ->options(
                             fn () =>
@@ -90,14 +90,14 @@ class ScheduleResource extends Resource
                         ->schema([
                             Forms\Components\TextInput::make('value')->label(fn ($get) => ucfirst($get('name')))->required(fn ($get) => $get('required')),
                             Forms\Components\Hidden::make('name'),
-                        ])->disableItemCreation()->withoutHeader()->disableItemDeletion()->disableItemMovement()
+                        ])->addable(false)->withoutHeader()->deletable(false)->reorderable(false)
                         ->columnSpan('full')->visible(fn ($get) => !empty(static::$commands->firstWhere('name', $get('command'))['arguments'])),
                     TableRepeater::make('options_with_value')->label(__('filament-database-schedule::schedule.fields.options_with_value'))
                         ->schema([
                             Forms\Components\TextInput::make('value')->label(fn ($get) => ucfirst($get('name')))->required(fn ($get) => $get('required')),
                             Forms\Components\Hidden::make('type')->default('string'),
                             Forms\Components\Hidden::make('name'),
-                        ])->disableItemCreation()->withoutHeader()->disableItemDeletion()->disableItemMovement()->default([])
+                        ])->addable(false)->withoutHeader()->deletable(false)->reorderable(false)->default([])
                         ->columnSpan('full')->visible(fn ($state) => !empty($state)),
                     Forms\Components\CheckboxList::make('options')->label(__('filament-database-schedule::schedule.fields.options'))
                         ->options(

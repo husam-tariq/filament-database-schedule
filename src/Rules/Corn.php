@@ -3,39 +3,18 @@
 namespace HusamTariq\FilamentDatabaseSchedule\Rules;
 
 use Cron\CronExpression;
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 
-class Corn implements Rule
+class Corn implements ValidationRule
 {
     /**
-     * Create a new rule instance.
-     *
-     * @return void
+     * Run the validation rule.
      */
-    public function __construct()
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        //
-    }
-
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function passes($attribute, $value)
-    {
-        return CronExpression::isValidExpression($value);
-    }
-
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
-    public function message()
-    {
-        return trans('filament-database-schedule::schedule.validation.cron');
+        if (!CronExpression::isValidExpression($value)) {
+            $fail(trans('filament-database-schedule::schedule.validation.cron'));
+        }
     }
 }
