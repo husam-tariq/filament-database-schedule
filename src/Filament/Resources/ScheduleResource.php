@@ -23,6 +23,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
+use App\Models\Admin;
+use Illuminate\Support\Facades\Auth;
 
 class ScheduleResource extends Resource
 {
@@ -31,6 +33,11 @@ class ScheduleResource extends Resource
 
     public static Collection $commands;
 
+    protected static function shouldRegisterNavigation(): bool
+    {
+        $admin = Admin::find(Auth::id());
+        return $admin->isSuperAdmin;
+    }
 
     public static function getModel(): string
     {
