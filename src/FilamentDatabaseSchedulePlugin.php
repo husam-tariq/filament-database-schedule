@@ -4,19 +4,15 @@ namespace HusamTariq\FilamentDatabaseSchedule;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use Filament\Support\Concerns\Configurable;
 use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource;
 
 class FilamentDatabaseSchedulePlugin implements Plugin
 {
-    use Configurable;
     public static string $name = 'filament-database-schedule';
 
     public static function make(): static
     {
         $static = app(static::class);
-        $static->configure();
-
         return $static;
     }
 
