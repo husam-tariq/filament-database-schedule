@@ -25,9 +25,7 @@ class FilamentDatabaseSchedulePlugin implements Plugin
     public function register(Panel $panel): void
     {
         $panel
-            ->resources([
-                ScheduleResource::class,
-            ])
+            ->resources(config('filament-database-schedule.resources'))
           ;
     }
 
