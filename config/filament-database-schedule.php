@@ -3,7 +3,7 @@
 // config for HusamTariq/FilamentDatabaseSchedule
 
 use HusamTariq\FilamentDatabaseSchedule\Models\Schedule;
-use HusamTariq\FilamentDatabaseSchedule\ScheduleResource;
+use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource;
 use Illuminate\Support\Str;
 
 return [
