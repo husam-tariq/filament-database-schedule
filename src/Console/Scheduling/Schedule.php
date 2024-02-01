@@ -3,6 +3,7 @@
 namespace HusamTariq\FilamentDatabaseSchedule\Console\Scheduling;
 
 use HusamTariq\FilamentDatabaseSchedule\Http\Services\ScheduleService;
+use HusamTariq\FilamentDatabaseSchedule\Models\ScheduleHistory;
 use \Illuminate\Console\Scheduling\Schedule as BaseSchedule;
 use Illuminate\Support\Facades\Log;
 
@@ -14,6 +15,8 @@ class Schedule
     private $schedule;
 
     private $tasks;
+
+    private $history;
 
     public function __construct(ScheduleService $scheduleService, BaseSchedule $schedule)
     {
@@ -89,20 +92,24 @@ class Schedule
                 $event->onOneServer();
             }
 
+            $event->before(function () use ($task, $command){
+                $this->history = $this->createHistoryEntry($task, $command);
+            });
+
             $event->onSuccess(
-                function () use ($task, $event, $command) {
+                function () use ($task, $event) {
                     $this->createLogFile($task, $event);
                     if ($task->log_success) {
-                        $this->createHistoryEntry($task, $event, $command);
+                        $this->updateHistoryEntry($this->history, $event);
                     }
                 }
             );
 
             $event->onFailure(
-                function () use ($task, $event, $command) {
+                function () use ($task, $event) {
                     $this->createLogFile($task, $event, 'critical');
                     if ($task->log_error) {
-                        $this->createHistoryEntry($task, $event, $command);
+                        $this->updateHistoryEntry($this->history, $event);
                     }
                 }
             );
@@ -128,13 +135,24 @@ class Schedule
         }
     }
 
-    private function createHistoryEntry($task, $event, $command)
+    private function createHistoryEntry($task, $command) : ScheduleHistory
     {
         $task->histories()->create(
             [
                 'command' => $command,
                 'params' => $task->getArguments(),
                 'options' => $task->getOptions(),
+                'output' => "Processing ..."
+            ]
+        );
+        $history = $task->histories()->latest()->first();
+        return $history;
+    }
+
+    private function updateHistoryEntry(ScheduleHistory $history, $event)
+    {
+        $history->update(
+            [
                 'output' => file_get_contents($event->output)
             ]
         );
