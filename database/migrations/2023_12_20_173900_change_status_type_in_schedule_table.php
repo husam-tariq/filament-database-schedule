@@ -19,7 +19,7 @@ class ChangeStatusTypeInScheduleTable extends Migration
 
         DB::table(Config::get('filament-database-schedule.table.schedules', 'schedules'))->where('status', 0)->update(['new_status' => 'inactive']);
         DB::table(Config::get('filament-database-schedule.table.schedules', 'schedules'))->where('status', 1)->update(['new_status' => 'active']);
-        DB::table(Config::get('filament-database-schedule.table.schedules', 'schedules'))->where('status', 3)->update(['new_status' => 'trashed']);
+        // DB::table(Config::get('filament-database-schedule.table.schedules', 'schedules'))->where('status', 3)->update(['new_status' => 'trashed']);
 
         Schema::table(Config::get('filament-database-schedule.table.schedules', 'schedules'), function (Blueprint $table) {
             $table->dropColumn('status');
