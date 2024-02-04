@@ -4,7 +4,6 @@ namespace HusamTariq\FilamentDatabaseSchedule;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource;
 
 class FilamentDatabaseSchedulePlugin implements Plugin
 {
@@ -25,9 +24,7 @@ class FilamentDatabaseSchedulePlugin implements Plugin
     public function register(Panel $panel): void
     {
         $panel
-            ->resources([
-                ScheduleResource::class,
-            ])
+            ->resources(config('filament-database-schedule.resources'))
           ;
     }
 

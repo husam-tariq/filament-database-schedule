@@ -3,6 +3,7 @@
 // config for HusamTariq/FilamentDatabaseSchedule
 
 use HusamTariq\FilamentDatabaseSchedule\Models\Schedule;
+use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource;
 use Illuminate\Support\Str;
 
 return [
@@ -17,7 +18,10 @@ return [
 
     'timezone' => env('FILAMENT_SCHEDULE_TIMEZONE', config('app.timezone')),
 
-
+    'resources' =>
+    [
+        ScheduleResource::class,
+    ],
 
     /**
      * Cache settings
