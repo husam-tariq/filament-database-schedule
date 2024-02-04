@@ -2,20 +2,21 @@
 
 namespace HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource\Pages;
 
-use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource;
-use Filament\Tables;
 use Filament\Forms;
-use Filament\Resources\Pages\Page;
-use Filament\Resources\Pages\Concerns\HasRelationManagers;
-use Filament\Resources\Concerns\HasTabs;
-use Filament\Resources\Pages\Concerns\InteractsWithRecord;
+use Filament\Tables;
 use Livewire\Attributes\Url;
-
+use Filament\Resources\Pages\Page;
+use Illuminate\Support\HtmlString;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Resources\Concerns\HasTabs;
 use Illuminate\Database\Eloquent\Builder;
-use HusamTariq\FilamentDatabaseSchedule\Filament\Columns\ScheduleArguments;
-use HusamTariq\FilamentDatabaseSchedule\Filament\Columns\ScheduleOptions;
+
+use Filament\Resources\Pages\Concerns\HasRelationManagers;
+use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use HusamTariq\FilamentDatabaseSchedule\Models\ScheduleHistory;
+use HusamTariq\FilamentDatabaseSchedule\Filament\Columns\ScheduleOptions;
+use HusamTariq\FilamentDatabaseSchedule\Filament\Columns\ScheduleArguments;
+use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource;
 
 class ViewSchedule extends Page implements HasTable
 {
@@ -28,7 +29,7 @@ class ViewSchedule extends Page implements HasTable
 
     #[Url]
     public ?string $activeTab = null;
-   
+
     use Forms\Concerns\InteractsWithForms;
     use Tables\Concerns\InteractsWithTable {
         makeTable as makeBaseTable;
@@ -72,17 +73,32 @@ class ViewSchedule extends Page implements HasTable
         return [
             Tables\Columns\Layout\Split::make([
                 Tables\Columns\TextColumn::make('command')->label(__('filament-database-schedule::schedule.fields.command')),
-                ScheduleArguments::make('params')->withValue(false)->label(__('filament-database-schedule::schedule.fields.arguments'))->separator(',')->badge(),
-                Tables\Columns\TextColumn::make('options')->label(__('filament-database-schedule::schedule.fields.options'))->separator(',')->badge(),
-                Tables\Columns\TextColumn::make('created_at')->label(__('filament-database-schedule::schedule.fields.expression'))
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('filament-database-schedule::schedule.fields.expression'))
                     ->dateTime(),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('filament-database-schedule::schedule.fields.expression'))
+                    ->formatStateUsing(function ($state, $record) {
+                        if($state == $record->created_at){
+                            return "Processing...";
+                        }else{
+                            return $state->diffInSeconds($record->created_at) . " seconds";
+                        }
+                    }),
+                Tables\Columns\TextColumn::make('output')
+                    ->label("Output lines")
+                    ->formatStateUsing(function ($state) {
+                        return (count(explode("<br />", nl2br($state))) - 1) . " rows of output";
+                    }),
             ]), Tables\Columns\Layout\Panel::make([
 
-                Tables\Columns\TextColumn::make('output')->extraAttributes(["class"=>"!max-w-max"],true),
+                Tables\Columns\TextColumn::make('output')->extraAttributes(["class" => "!max-w-max"], true)
+                    ->formatStateUsing(function ($state) {
+                        return new HtmlString(nl2br($state));
+                    }),
 
 
             ])->collapsible()->collapsed(config("filament-database-schedule.history_collapsed")),
-
         ];
     }
 }
