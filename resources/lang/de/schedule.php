@@ -58,6 +58,7 @@ return [
         'inactivate' => 'Inaktivieren',
         'activate' => 'Aktivieren',
         'history' => 'Verlauf',
+        'clear_history' => 'Verlauf löschen',
 
     ],
     'validation' => [

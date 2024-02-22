@@ -41,6 +41,8 @@ class Schedule extends Model
         'run_in_background',
         'log_filename',
         'environments',
+        'max_history_count',
+        'limit_history_count',
     ];
 
     protected $attributes = [
@@ -55,6 +57,8 @@ class Schedule extends Model
         'options' => 'array',
         'options_with_value' => 'array',
         'environments' => 'array',
+        'max_history_count' => 'integer',
+        'limit_history_count' => 'boolean',
         'status' => Status::class,
     ];
 

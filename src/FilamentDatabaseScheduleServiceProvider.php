@@ -12,6 +12,8 @@ use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Composer\InstalledVersions;
+use HusamTariq\FilamentDatabaseSchedule\Models\ScheduleHistory;
+use HusamTariq\FilamentDatabaseSchedule\Observer\ScheduleHistoryObserver;
 use HusamTariq\FilamentDatabaseSchedule\Observer\ScheduleObserver;
 use Spatie\LaravelPackageTools\Package;
 use Illuminate\Console\Scheduling\Schedule as BaseSchedule;
@@ -82,6 +84,7 @@ class FilamentDatabaseScheduleServiceProvider extends PackageServiceProvider
         $config = $this->app['config'];
         $model = $config->get('filament-database-schedule.model');
         $model::observe(ScheduleObserver::class);
+        ScheduleHistory::observe(ScheduleHistoryObserver::class);
 
         try {
             if (Schema::hasTable($config->get('filament-database-schedule.table.schedules', 'schedules'))) {

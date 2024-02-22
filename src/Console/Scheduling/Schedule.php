@@ -137,7 +137,7 @@ class Schedule
 
     private function createHistoryEntry($task, $command) : ScheduleHistory
     {
-        $task->histories()->create(
+        return $task->histories()->create(
             [
                 'command' => $command,
                 'params' => $task->getArguments(),
@@ -145,8 +145,6 @@ class Schedule
                 'output' => "Processing ..."
             ]
         );
-        $history = $task->histories()->latest()->first();
-        return $history;
     }
 
     private function updateHistoryEntry(ScheduleHistory $history, $event)

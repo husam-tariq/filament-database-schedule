@@ -2,6 +2,7 @@
 
 namespace HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource\Pages;
 
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Tables;
 use Livewire\Attributes\Url;
@@ -39,7 +40,21 @@ class ViewSchedule extends Page implements HasTable
     }
     protected function getActions(): array
     {
-        return [];
+        return [
+            Action::make('clearHistory')
+                ->label(__('filament-database-schedule::schedule.buttons.clear_history'))
+                ->requiresConfirmation()
+                ->modalHeading(__('filament-database-schedule::schedule.buttons.clear_history'))
+                ->modalDescription('Are you sure you want to delete all entries for the selected schedule?')
+                ->modalSubmitActionLabel('Yes, delete it all')
+                ->modalIcon('heroicon-m-trash')
+                ->visible($this->record->histories->count())
+                ->color('danger')
+                ->icon('heroicon-m-trash')
+                ->action(function() {
+                    $this->record->histories()->delete();
+                }),
+        ];
     }
 
     public function getTitle(): string
