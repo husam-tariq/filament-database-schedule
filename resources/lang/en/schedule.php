@@ -32,7 +32,8 @@ return [
         'created_at' => 'Created At',
         'updated_at' => 'Updated At',
         'never' => 'Never',
-        'environments' => 'Environments'
+        'environments' => 'Environments',
+        'limit_history_count' => 'Limit History Count',
     ],
     'messages' => [
         'no-records-found' => 'No records found.',

@@ -125,6 +125,7 @@ class ScheduleResource extends Resource
                     Forms\Components\TextInput::make('email_output')
                         ->label(__('filament-database-schedule::schedule.fields.email_output')),
                     Forms\Components\Section::make('History')
+                        ->label(__('filament-database-schedule::schedule.button.history'))
                         ->columns(2)
                         ->schema([
                             Forms\Components\Toggle::make('log_success')
@@ -132,7 +133,7 @@ class ScheduleResource extends Resource
                             Forms\Components\Toggle::make('log_error')
                                 ->label(__('filament-database-schedule::schedule.fields.log_error'))->default(true),
                             Forms\Components\Toggle::make('limit_history_count')
-                                ->label('Limit History Count')
+                                ->label(__('filament-database-schedule::schedule.fields.limit_history_count'))
                                 ->live(),
                             Forms\Components\TextInput::make('max_history_count')
                                 ->label('')
