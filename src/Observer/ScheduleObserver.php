@@ -3,6 +3,7 @@
 namespace HusamTariq\FilamentDatabaseSchedule\Observer;
 
 use HusamTariq\FilamentDatabaseSchedule\Enums\Status;
+use HusamTariq\FilamentDatabaseSchedule\Http\Services\ScheduleHistoryService;
 use HusamTariq\FilamentDatabaseSchedule\Http\Services\ScheduleService;
 use HusamTariq\FilamentDatabaseSchedule\Models\Schedule;
 
@@ -15,6 +16,9 @@ class ScheduleObserver
 
     public function updated(Schedule $schedule)
     {
+        if ($schedule->limit_history_count === true && $schedule->isDirty(['limit_history_count','max_history_count'])) {
+            ScheduleHistoryService::prune($schedule);
+        }
         $this->clearCache();
     }
 

@@ -32,7 +32,8 @@ return [
         'created_at' => 'Erstellt am',
         'updated_at' => 'Aktualisiert am',
         'never' => 'Nie',
-        'environments' => 'Umgebungen'
+        'environments' => 'Umgebungen',
+        'limit_history_count' => 'Verlauf begrenzen',
     ],
     'messages' => [
         'no-records-found' => 'Keine Datensätze gefunden.',
@@ -58,6 +59,7 @@ return [
         'inactivate' => 'Inaktivieren',
         'activate' => 'Aktivieren',
         'history' => 'Verlauf',
+        'clear_history' => 'Verlauf löschen',
 
     ],
     'validation' => [

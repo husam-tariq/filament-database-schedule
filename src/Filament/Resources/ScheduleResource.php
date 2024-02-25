@@ -5,10 +5,10 @@ namespace HusamTariq\FilamentDatabaseSchedule\Filament\Resources;
 use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Carbon\Carbon;
 use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource\Pages;
-use HusamTariq\FilamentDatabaseSchedule\Models\Schedule;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\Column;
@@ -16,7 +16,6 @@ use Filament\Tables\Table;
 use HusamTariq\FilamentDatabaseSchedule\Enums\Status;
 use HusamTariq\FilamentDatabaseSchedule\Filament\Columns\ActionGroup;
 use HusamTariq\FilamentDatabaseSchedule\Filament\Columns\ScheduleArguments;
-use HusamTariq\FilamentDatabaseSchedule\Filament\Columns\ScheduleOptions;
 use HusamTariq\FilamentDatabaseSchedule\Http\Services\CommandService;
 use HusamTariq\FilamentDatabaseSchedule\Rules\Corn;
 use Illuminate\Database\Eloquent\Builder;
@@ -125,14 +124,27 @@ class ScheduleResource extends Resource
                         ->label(__('filament-database-schedule::schedule.fields.webhook_after')),
                     Forms\Components\TextInput::make('email_output')
                         ->label(__('filament-database-schedule::schedule.fields.email_output')),
+                    Forms\Components\Section::make('History')
+                        ->label(__('filament-database-schedule::schedule.button.history'))
+                        ->columns(2)
+                        ->schema([
+                            Forms\Components\Toggle::make('log_success')
+                                ->label(__('filament-database-schedule::schedule.fields.log_success'))->default(true),
+                            Forms\Components\Toggle::make('log_error')
+                                ->label(__('filament-database-schedule::schedule.fields.log_error'))->default(true),
+                            Forms\Components\Toggle::make('limit_history_count')
+                                ->label(__('filament-database-schedule::schedule.fields.limit_history_count'))
+                                ->live(),
+                            Forms\Components\TextInput::make('max_history_count')
+                                ->label('')
+                                ->numeric()
+                                ->default(10)
+                                ->visible(fn (Get $get): bool => $get('limit_history_count')),
+                        ]),
                     Forms\Components\Toggle::make('sendmail_success')
                         ->label(__('filament-database-schedule::schedule.fields.sendmail_success')),
                     Forms\Components\Toggle::make('sendmail_error')
                         ->label(__('filament-database-schedule::schedule.fields.sendmail_error')),
-                    Forms\Components\Toggle::make('log_success')
-                        ->label(__('filament-database-schedule::schedule.fields.log_success'))->default(true),
-                    Forms\Components\Toggle::make('log_error')
-                        ->label(__('filament-database-schedule::schedule.fields.log_error'))->default(true),
                     Forms\Components\Toggle::make('even_in_maintenance_mode')
                         ->label(__('filament-database-schedule::schedule.fields.even_in_maintenance_mode')),
                     Forms\Components\Toggle::make('without_overlapping')
@@ -200,7 +212,11 @@ class ScheduleResource extends Resource
                                 $record->status = Status::Active;
                             $record->save();
                         })->tooltip(fn ($record) => $record->status === Status::Active ? __('filament-database-schedule::schedule.buttons.inactivate') : __('filament-database-schedule::schedule.buttons.activate')),
-                    Tables\Actions\ViewAction::make()->icon('schedule-history')->color('gray')->tooltip(__('filament-database-schedule::schedule.buttons.history')),
+                    Tables\Actions\ViewAction::make()
+                        ->icon('schedule-history')
+                        ->color('gray')
+                        ->tooltip(__('filament-database-schedule::schedule.buttons.history'))
+                        ->visible(fn ($record) => $record->histories()->count()),
                 ])
 
             ])
