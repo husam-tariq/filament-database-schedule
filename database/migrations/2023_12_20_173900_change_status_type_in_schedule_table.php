@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 class ChangeStatusTypeInScheduleTable extends Migration
 {
@@ -23,6 +25,8 @@ class ChangeStatusTypeInScheduleTable extends Migration
 
         Schema::table(Config::get('filament-database-schedule.table.schedules', 'schedules'), function (Blueprint $table) {
             $table->dropColumn('status');
+        });
+        Schema::table(Config::get('filament-database-schedule.table.schedules', 'schedules'), function (Blueprint $table) {
             $table->renameColumn('new_status', 'status');
         });
     }
@@ -44,6 +48,8 @@ class ChangeStatusTypeInScheduleTable extends Migration
 
         Schema::table(Config::get('filament-database-schedule.table.schedules', 'schedules'), function (Blueprint $table) {
             $table->dropColumn('status');
+        });
+        Schema::table(Config::get('filament-database-schedule.table.schedules', 'schedules'), function (Blueprint $table) {
             $table->renameColumn('old_status', 'status');
         });
     }
