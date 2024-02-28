@@ -204,13 +204,13 @@
 
         @if (! $isItemCreationDisabled)
             <div class="relative flex justify-center">
-                <x-forms::button
+                <x-filament::button
                     :wire:click="'dispatchFormEvent(\'repeater::createItem\', \'' . $getStatePath() . '\')'"
                     size="sm"
                     type="button"
                 >
                     {{ $getCreateItemButtonLabel() }}
-                </x-forms::button>
+                </x-filament::button>
             </div>
         @endif
     </div>
