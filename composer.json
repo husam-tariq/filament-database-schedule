@@ -20,10 +20,10 @@
         "awcodes/filament-table-repeater": "^2.0.4",
         "filament/filament": "^3.0.47",
         "spatie/laravel-package-tools": "^1.13.5",
-        "illuminate/contracts": "^8.0|^9.0|^10.0"
+        "illuminate/contracts": "^8.0|^9.0|^10.0|^11.0"
     },
     "require-dev": {
-        "nunomaduro/collision": "^7.0.0",
+        "nunomaduro/collision": "^8.0.0",
         "pestphp/pest": "^2.0",
         "pestphp/pest-plugin-laravel": "^2.1",
         "pestphp/pest-plugin-livewire": "^2.0",
