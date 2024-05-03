@@ -2,7 +2,7 @@
 
 namespace HusamTariq\FilamentDatabaseSchedule\Http\Services;
 
-use App\Console\Kernel;
+use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\Collection;
 
 class CommandService
