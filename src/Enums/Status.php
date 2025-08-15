@@ -6,13 +6,14 @@ use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum Status: string implements HasIcon, HasColor, HasLabel {
+enum Status: string implements HasIcon, HasColor, HasLabel
+{
 
     case Active = 'active';
     case Inactive = 'inactive';
     case Trashed = 'trashed';
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::Active => 'success',
@@ -37,5 +38,14 @@ enum Status: string implements HasIcon, HasColor, HasLabel {
             self::Inactive => __('filament-database-schedule::schedule.status.inactive'),
             self::Trashed => __('filament-database-schedule::schedule.status.trashed'),
         };
+    }
+
+    public static function toArray(): array
+    {
+        return [
+            self::Active->value,
+            self::Inactive->value,
+            self::Trashed->value,
+        ];
     }
 }

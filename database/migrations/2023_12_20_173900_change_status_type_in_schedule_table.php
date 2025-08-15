@@ -1,5 +1,6 @@
 <?php
 
+use HusamTariq\FilamentDatabaseSchedule\Enums\Status;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,18 +17,21 @@ class ChangeStatusTypeInScheduleTable extends Migration
     public function up()
     {
         Schema::table(Config::get('filament-database-schedule.table.schedules', 'schedules'), function (Blueprint $table) {
-            $table->enum('new_status', ['active', 'inactive', 'trashed'])->default('active')->after('status');
+            $table->enum('new_status', Status::toArray())->nullable()->after('status');
         });
 
-        DB::table(Config::get('filament-database-schedule.table.schedules', 'schedules'))->where('status', 0)->update(['new_status' => 'inactive']);
-        DB::table(Config::get('filament-database-schedule.table.schedules', 'schedules'))->where('status', 1)->update(['new_status' => 'active']);
-        // DB::table(Config::get('filament-database-schedule.table.schedules', 'schedules'))->where('status', 3)->update(['new_status' => 'trashed']);
+        DB::table(Config::get('filament-database-schedule.table.schedules', 'schedules'))->where('status', 0)->update(['new_status' => Status::Inactive]);
+        DB::table(Config::get('filament-database-schedule.table.schedules', 'schedules'))->where('status', 1)->update(['new_status' => Status::Active]);
+        DB::table(Config::get('filament-database-schedule.table.schedules', 'schedules'))->where('status', 3)->update(['new_status' => Status::Trashed]);
 
         Schema::table(Config::get('filament-database-schedule.table.schedules', 'schedules'), function (Blueprint $table) {
             $table->dropColumn('status');
         });
         Schema::table(Config::get('filament-database-schedule.table.schedules', 'schedules'), function (Blueprint $table) {
             $table->renameColumn('new_status', 'status');
+        });
+        Schema::table(Config::get('filament-database-schedule.table.schedules', 'schedules'), function (Blueprint $table) {
+            $table->enum('status', Status::toArray())->default(Status::Active)->change();
         });
     }
 

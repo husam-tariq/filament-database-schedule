@@ -2,7 +2,8 @@
 
 namespace HusamTariq\FilamentDatabaseSchedule\Filament\Resources;
 
-use Awcodes\FilamentTableRepeater\Components\TableRepeater;
+use Awcodes\TableRepeater\Components\TableRepeater;
+use Awcodes\TableRepeater\Header;
 use Carbon\Carbon;
 use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource\Pages;
 use Filament\Forms;
@@ -34,7 +35,7 @@ class ScheduleResource extends Resource
 
     public static function getModel(): string
     {
-        return  config('filament-database-schedule.model');
+        return config('filament-database-schedule.model');
     }
 
     public static function getNavigationIcon(): ?string
@@ -70,9 +71,9 @@ class ScheduleResource extends Resource
                 Section::make([
                     Forms\Components\Select::make('command')->label(__('filament-database-schedule::schedule.fields.command'))
                         ->options(
-                            fn () =>
+                            fn() =>
                             config('filament-database-schedule.commands.enable_custom') ?
-                                static::$commands->pluck('full_name', 'name')->prepend(__('filament-database-schedule::schedule.messages.custom'), 'custom') : static::$commands->pluck('full_name', 'name')
+                            static::$commands->pluck('full_name', 'name')->prepend(__('filament-database-schedule::schedule.messages.custom'), 'custom') : static::$commands->pluck('full_name', 'name')
                         )
                         ->reactive()
                         ->searchable()
@@ -85,33 +86,42 @@ class ScheduleResource extends Resource
                         ->placeholder(__('filament-database-schedule::schedule.messages.custom-command-here'))
                         ->label(__('filament-database-schedule::schedule.messages.custom'))
                         ->required()
-                        ->visible(fn ($get) => $get('command') === 'custom' && config('filament-database-schedule.commands.enable_custom')),
+                        ->visible(fn($get) => $get('command') === 'custom' && config('filament-database-schedule.commands.enable_custom')),
                     TableRepeater::make('params')->label(__('filament-database-schedule::schedule.fields.arguments'))
+                        ->headers([
+                            Header::make('value'),
+                            Header::make('name'),
+                        ])->showLabels()
                         ->schema([
-                            Forms\Components\TextInput::make('value')->label(fn ($get) => ucfirst($get('name')))->required(fn ($get) => $get('required')),
+                            Forms\Components\TextInput::make('value')->label(fn($get) => ucfirst($get('name')))->required(fn($get) => $get('required')),
                             Forms\Components\Hidden::make('name'),
-                        ])->addable(false)->withoutHeader()->deletable(false)->reorderable(false)
-                        ->columnSpan('full')->visible(fn ($get) => !empty(static::$commands->firstWhere('name', $get('command'))['arguments'])),
+                        ])->addable(false)->renderHeader(false)->deletable(false)->reorderable(false)
+                        ->columnSpan('full')->visible(fn($get) => !empty(static::$commands->firstWhere('name', $get('command'))['arguments'])),
                     TableRepeater::make('options_with_value')->label(__('filament-database-schedule::schedule.fields.options_with_value'))
+                        ->headers([
+                            Header::make('value'),
+                            Header::make('type'),
+                            Header::make('name'),
+                        ])->showLabels()
                         ->schema([
-                            Forms\Components\TextInput::make('value')->label(fn ($get) => ucfirst($get('name')))->required(fn ($get) => $get('required')),
+                            Forms\Components\TextInput::make('value')->label(fn($get) => ucfirst($get('name')))->required(fn($get) => $get('required')),
                             Forms\Components\Hidden::make('type')->default('string'),
                             Forms\Components\Hidden::make('name'),
-                        ])->addable(false)->withoutHeader()->deletable(false)->reorderable(false)->default([])
-                        ->columnSpan('full')->visible(fn ($state) => !empty($state)),
+                        ])->addable(false)->renderHeader(false)->deletable(false)->reorderable(false)->default([])
+                        ->columnSpan('full')->visible(fn($state) => !empty($state)),
                     Forms\Components\CheckboxList::make('options')->label(__('filament-database-schedule::schedule.fields.options'))
                         ->options(
-                            fn ($get) =>
+                            fn($get) =>
                             collect(static::$commands->firstWhere('name', $get('command'))['options']['withoutValue'] ?? [])
                                 ->mapWithKeys(function ($value) {
                                     return [$value => $value];
                                 }),
-                        )->columns(3)->columnSpanFull()->visible(fn (Forms\Components\CheckboxList $component) => !empty($component->getOptions())),
+                        )->columns(3)->columnSpanFull()->visible(fn(Forms\Components\CheckboxList $component) => !empty($component->getOptions())),
                     Forms\Components\TextInput::make('expression')
                         ->placeholder('* * * * *')
                         ->rules([new Corn()])
                         ->label(__('filament-database-schedule::schedule.fields.expression'))
-                        ->required()->helperText(fn () => config('filament-database-schedule.tool-help-cron-expression.enable') ? new HtmlString(" <a href='" . config('filament-database-schedule.tool-help-cron-expression.url') . "' target='_blank'>" . __('filament-database-schedule::schedule.messages.help-cron-expression') . " </a>") : null),
+                        ->required()->helperText(fn() => config('filament-database-schedule.tool-help-cron-expression.enable') ? new HtmlString(" <a href='" . config('filament-database-schedule.tool-help-cron-expression.url') . "' target='_blank'>" . __('filament-database-schedule::schedule.messages.help-cron-expression') . " </a>") : null),
                     Forms\Components\TagsInput::make('environments')
                         ->placeholder(null)
                         ->label(__('filament-database-schedule::schedule.fields.environments')),
@@ -139,7 +149,7 @@ class ScheduleResource extends Resource
                                 ->label('')
                                 ->numeric()
                                 ->default(10)
-                                ->visible(fn (Get $get): bool => $get('limit_history_count')),
+                                ->visible(fn(Get $get): bool => $get('limit_history_count')),
                         ]),
                     Forms\Components\Toggle::make('sendmail_success')
                         ->label(__('filament-database-schedule::schedule.fields.sendmail_success')),
@@ -167,7 +177,7 @@ class ScheduleResource extends Resource
                     return $record->command;
                 })->label(__('filament-database-schedule::schedule.fields.command'))->searchable()->sortable(),
                 ScheduleArguments::make('params')->label(__('filament-database-schedule::schedule.fields.arguments'))->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('options')->label(__('filament-database-schedule::schedule.fields.options'))->searchable()->sortable()->getStateUsing(fn(Model $record)=>$record->getOptions())->separator(',')->badge(),
+                Tables\Columns\TextColumn::make('options')->label(__('filament-database-schedule::schedule.fields.options'))->searchable()->sortable()->getStateUsing(fn(Model $record) => $record->getOptions())->separator(',')->badge(),
                 Tables\Columns\TextColumn::make('expression')->label(__('filament-database-schedule::schedule.fields.expression'))->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('environments')->label(__('filament-database-schedule::schedule.fields.environments'))->separator(',')->searchable()->sortable()->badge()->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('status')
@@ -177,7 +187,7 @@ class ScheduleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('created_at')->label(__('filament-database-schedule::schedule.fields.created_at'))->searchable()->sortable()
                     ->dateTime()->wrap()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')->getStateUsing(fn ($record) => $record->created_at == $record->updated_at ? __('filament-database-schedule::schedule.fields.never') : $record->updated_at)
+                Tables\Columns\TextColumn::make('updated_at')->getStateUsing(fn($record) => $record->created_at == $record->updated_at ? __('filament-database-schedule::schedule.fields.never') : $record->updated_at)
                     ->wrap()->formatStateUsing(static function (Column $column, $state): ?string {
                         $format ??= Table::$defaultDateTimeDisplayFormat;
 
@@ -197,26 +207,26 @@ class ScheduleResource extends Resource
             ])
             ->actions([
                 ActionGroup::make([
-                    Tables\Actions\EditAction::make()->hidden(fn ($record) => $record->trashed())->tooltip(__('filament-actions::edit.single.label')),
+                    Tables\Actions\EditAction::make()->hidden(fn($record) => $record->trashed())->tooltip(__('filament-actions::edit.single.label')),
                     Tables\Actions\RestoreAction::make()->tooltip(__('filament-actions::restore.single.label')),
                     Tables\Actions\DeleteAction::make()->tooltip(__('filament-actions::delete.single.label')),
                     Tables\Actions\ForceDeleteAction::make()->tooltip(__('filament-support::actions/force-delete.single.label')),
                     Tables\Actions\Action::make('toggle')
-                        ->disabled(fn ($record) => $record->trashed())
-                        ->icon(fn ($record) => $record->status === Status::Active ? 'schedule-pause-fill' : 'schedule-play-fill')
-                        ->color(fn ($record) => $record->status === Status::Active ? 'warning' : 'success')
+                        ->disabled(fn($record) => $record->trashed())
+                        ->icon(fn($record) => $record->status === Status::Active ? 'schedule-pause-fill' : 'schedule-play-fill')
+                        ->color(fn($record) => $record->status === Status::Active ? 'warning' : 'success')
                         ->action(function ($record): void {
                             if ($record->status === Status::Active)
                                 $record->status = Status::Inactive;
                             else if ($record->status === Status::Inactive)
                                 $record->status = Status::Active;
                             $record->save();
-                        })->tooltip(fn ($record) => $record->status === Status::Active ? __('filament-database-schedule::schedule.buttons.inactivate') : __('filament-database-schedule::schedule.buttons.activate')),
+                        })->tooltip(fn($record) => $record->status === Status::Active ? __('filament-database-schedule::schedule.buttons.inactivate') : __('filament-database-schedule::schedule.buttons.activate')),
                     Tables\Actions\ViewAction::make()
                         ->icon('schedule-history')
                         ->color('gray')
                         ->tooltip(__('filament-database-schedule::schedule.buttons.history'))
-                        ->visible(fn ($record) => $record->histories()->count()),
+                        ->visible(fn($record) => $record->histories()->count()),
                 ])
 
             ])
