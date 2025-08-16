@@ -8,10 +8,7 @@ use HusamTariq\FilamentDatabaseSchedule\Console\Commands\ScheduleClearCacheComma
 use HusamTariq\FilamentDatabaseSchedule\Console\Commands\TestJobCommand;
 use HusamTariq\FilamentDatabaseSchedule\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Schema;
-use Filament\Support\Assets\Css;
-use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
-use Composer\InstalledVersions;
 use HusamTariq\FilamentDatabaseSchedule\Models\ScheduleHistory;
 use HusamTariq\FilamentDatabaseSchedule\Observer\ScheduleHistoryObserver;
 use HusamTariq\FilamentDatabaseSchedule\Observer\ScheduleObserver;
@@ -22,8 +19,6 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 class FilamentDatabaseScheduleServiceProvider extends PackageServiceProvider
 {
     public static string $name = 'filament-database-schedule';
-    private static string $version = 'dev';
-
     public function configurePackage(Package $package): void
     {
         $package
@@ -45,15 +40,10 @@ class FilamentDatabaseScheduleServiceProvider extends PackageServiceProvider
         return static::$name;
     }
 
-     protected function getAssets(): array
+    protected function getAssets(): array
     {
-        static::$version = InstalledVersions::getVersion('husam-tariq/filament-database-schedule');
-        $assetId = $this->getAssetPackageName() . static::$version;
-
-
         return [
-            Js::make($assetId, __DIR__ . '/../resources/dist/filament-database-schedule.js'),
-            Css::make($assetId, __DIR__ . '/../resources/dist/filament-database-schedule.css'),
+
         ];
 
     }
@@ -93,7 +83,8 @@ class FilamentDatabaseScheduleServiceProvider extends PackageServiceProvider
                     return $schedule->execute();
                 });
             }
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         $this->commands([
             TestJobCommand::class,

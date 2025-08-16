@@ -1,15 +1,14 @@
 <?php
 
-namespace HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource\Pages;
+namespace HusamTariq\FilamentDatabaseSchedule\Filament\Resources\Schedules\Pages;
 
-use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource;
-use Filament\Notifications\Notification;
+use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\Schedules\ScheduleResource;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Validation\ValidationException;
+use Filament\Notifications\Notification;
 
 class CreateSchedule extends CreateRecord
 {
-
     protected static string $resource = ScheduleResource::class;
 
     protected function onValidationError(ValidationException $exception): void
@@ -24,6 +23,4 @@ class CreateSchedule extends CreateRecord
     {
         return $this->getResource()::getUrl('index');
     }
-
-
 }

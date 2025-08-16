@@ -1,43 +1,68 @@
 <?php
 
-namespace HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource\Pages;
+namespace HusamTariq\FilamentDatabaseSchedule\Filament\Resources\Schedules\Pages;
 
+use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\Schedules\ScheduleResource;
 use Filament\Actions\Action;
-use Filament\Forms;
-use Filament\Tables;
-use Livewire\Attributes\Url;
 use Filament\Resources\Pages\Page;
-use Illuminate\Support\HtmlString;
-use Filament\Tables\Contracts\HasTable;
 use Filament\Resources\Concerns\HasTabs;
-use Illuminate\Database\Eloquent\Builder;
-
-use Filament\Resources\Pages\Concerns\HasRelationManagers;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
+use Filament\Schemas\Components\EmbeddedTable;
+use Filament\Schemas\Components\RenderHook;
+use Filament\Schemas\Schema;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Filament\View\PanelsRenderHook;
 use HusamTariq\FilamentDatabaseSchedule\Models\ScheduleHistory;
-use HusamTariq\FilamentDatabaseSchedule\Filament\Columns\ScheduleOptions;
-use HusamTariq\FilamentDatabaseSchedule\Filament\Columns\ScheduleArguments;
-use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
+use Livewire\Attributes\Url;
 
-class ViewSchedule extends Page implements HasTable
+class ViewSchedule extends Page implements Tables\Contracts\HasTable
 {
-
-    protected static string $resource = ScheduleResource::class;
-    protected static string $view = 'filament-panels::resources.pages.list-records';
-    use InteractsWithRecord;
-    use HasRelationManagers;
     use HasTabs;
+    use Tables\Concerns\InteractsWithTable {
+        makeTable as makeBaseTable;
+    }
 
-    #[Url]
+    #[Url(as: 'reordering')]
+    public bool $isTableReordering = false;
+
+    /**
+     * @var array<string, mixed> | null
+     */
+    #[Url(as: 'filters')]
+    public ?array $tableFilters = null;
+
+    #[Url(as: 'grouping')]
+    public ?string $tableGrouping = null;
+
+    /**
+     * @var ?string
+     */
+    #[Url(as: 'search')]
+    public $tableSearch = '';
+
+    #[Url(as: 'sort')]
+    public ?string $tableSort = null;
+
+    #[Url(as: 'tab')]
     public ?string $activeTab = null;
 
-    use Forms\Concerns\InteractsWithForms;
-    use Tables\Concerns\InteractsWithTable {
-        makeTable as makeBaseTable;
+    public function getBreadcrumb(): ?string
+    {
+        return static::$breadcrumb ?? __('filament-panels::resources/pages/view-record.breadcrumb');
     }
-    use Tables\Concerns\InteractsWithTable {
-        makeTable as makeBaseTable;
+
+    public function table(Table $table): Table
+    {
+        return $table->columns($this->getTableColumns());
     }
+    protected static string $resource = ScheduleResource::class;
+
+
+    use InteractsWithRecord;
+
     protected function getActions(): array
     {
         return [
@@ -51,7 +76,7 @@ class ViewSchedule extends Page implements HasTable
                 ->visible($this->record->histories->count())
                 ->color('danger')
                 ->icon('heroicon-m-trash')
-                ->action(function() {
+                ->action(function () {
                     $this->record->histories()->delete();
                 }),
         ];
@@ -72,17 +97,24 @@ class ViewSchedule extends Page implements HasTable
         abort_unless(static::getResource()::canView($this->getRecord()), 403);
     }
 
-    protected function getRelationManagers(): array
-    {
-        return [];
-    }
+
 
 
     protected function getTableQuery(): Builder
     {
-        return ScheduleHistory::where('schedule_id', $this->record->id)->latest();
+        return ScheduleHistory::where('schedule_id', $this->record->id)->orderBy('created_at', 'desc');
     }
 
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getTabsContentComponent(),
+                RenderHook::make(PanelsRenderHook::RESOURCE_PAGES_LIST_RECORDS_TABLE_BEFORE),
+                EmbeddedTable::make(),
+                RenderHook::make(PanelsRenderHook::RESOURCE_PAGES_LIST_RECORDS_TABLE_AFTER),
+            ]);
+    }
     protected function getTableColumns(): array
     {
         return [
@@ -94,9 +126,9 @@ class ViewSchedule extends Page implements HasTable
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label(__('filament-database-schedule::schedule.fields.expression'))
                     ->formatStateUsing(function ($state, $record) {
-                        if($state == $record->created_at){
+                        if ($state == $record->created_at) {
                             return "Processing...";
-                        }else{
+                        } else {
                             return $state->diffInSeconds($record->created_at) . " seconds";
                         }
                     }),
@@ -105,7 +137,8 @@ class ViewSchedule extends Page implements HasTable
                     ->formatStateUsing(function ($state) {
                         return (count(explode("<br />", nl2br($state))) - 1) . " rows of output";
                     }),
-            ]), Tables\Columns\Layout\Panel::make([
+            ]),
+            Tables\Columns\Layout\Panel::make([
 
                 Tables\Columns\TextColumn::make('output')->extraAttributes(["class" => "!max-w-max"], true)
                     ->formatStateUsing(function ($state) {
