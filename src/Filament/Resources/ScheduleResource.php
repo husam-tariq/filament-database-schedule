@@ -135,7 +135,7 @@ class ScheduleResource extends Resource
                     Forms\Components\TextInput::make('email_output')
                         ->label(__('filament-database-schedule::schedule.fields.email_output')),
                     Forms\Components\Section::make('History')
-                        ->label(__('filament-database-schedule::schedule.button.history'))
+                        ->label(__('filament-database-schedule::schedule.buttons.history'))
                         ->columns(2)
                         ->schema([
                             Forms\Components\Toggle::make('log_success')
