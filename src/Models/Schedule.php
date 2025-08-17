@@ -99,9 +99,9 @@ class Schedule extends Model
                 continue;
             }
             if (isset($value["type"]) && $value['type'] === 'function') {
-                eval('$arguments[$argument] = (string) ' . $value['value']);
+                eval ('$arguments[$argument] = (string) ' . $value['value']);
             } else {
-                $arguments[$value['name']??$argument] = $value['value'];
+                $arguments[$value['name'] ?? $argument] = $value['value'];
             }
         }
 
@@ -114,16 +114,17 @@ class Schedule extends Model
 
         $options_with_value = $this->options_with_value ?? [];
         if (!empty($options_with_value))
-        $options = $options->merge($options_with_value);
+            $options = $options->merge($options_with_value);
         return $options->map(function ($value, $key) {
 
-                if (is_array($value)) {
-                    return "--" . ($value['name']??$key) . "=" . $value['value'];
-                } else {
-                    return "--$value";
-                }
+            if (is_array($value)) {
+                if (isset($value['value']))
+                    return "--" . ($value['name'] ?? $key) . "=" . $value['value'];
 
-        })->toArray();
+            } else {
+                return "--$value";
+            }
+        })->filter()->values()->toArray();
     }
 
     public static function getEnvironments()

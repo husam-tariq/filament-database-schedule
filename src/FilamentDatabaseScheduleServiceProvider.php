@@ -9,6 +9,7 @@ use HusamTariq\FilamentDatabaseSchedule\Console\Commands\TestJobCommand;
 use HusamTariq\FilamentDatabaseSchedule\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Schema;
 use Filament\Support\Facades\FilamentAsset;
+use Filament\Support\Assets\Css;
 use HusamTariq\FilamentDatabaseSchedule\Models\ScheduleHistory;
 use HusamTariq\FilamentDatabaseSchedule\Observer\ScheduleHistoryObserver;
 use HusamTariq\FilamentDatabaseSchedule\Observer\ScheduleObserver;
@@ -43,9 +44,8 @@ class FilamentDatabaseScheduleServiceProvider extends PackageServiceProvider
     protected function getAssets(): array
     {
         return [
-
+            Css::make($this->getAssetPackageName(), __DIR__ . '/../resources/dist/filament-database-schedule.css'),
         ];
-
     }
 
     public function register()

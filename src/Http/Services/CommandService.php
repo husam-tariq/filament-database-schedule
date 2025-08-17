@@ -11,11 +11,11 @@ class CommandService
     {
         $commands = collect(app(Kernel::class)->all())->sortKeys();
         $commandsKeys = $commands->keys()->toArray();
-        if(config('filament-database-schedule.commands.show_supported_only')){
+        if (config('filament-database-schedule.commands.show_supported_only')) {
             foreach (config('filament-database-schedule.commands.supported') as $supported) {
                 $commandsKeys = preg_grep("/^$supported/", $commandsKeys);
             }
-        }else{
+        } else {
             foreach (config('filament-database-schedule.commands.exclude') as $exclude) {
                 $commandsKeys = preg_grep("/^$exclude/", $commandsKeys, PREG_GREP_INVERT);
             }
@@ -27,7 +27,7 @@ class CommandService
                     'name' => $command->getName(),
                     'description' => $command->getDescription(),
                     'signature' => $command->getSynopsis(),
-                    'full_name' =>$command->getName().' ('.$command->getDescription().")",
+                    'full_name' => $command->getName() . ' (' . $command->getDescription() . ")",
                     'arguments' => static::getArguments($command),
                     'options' => static::getOptions($command),
                 ];
@@ -36,7 +36,7 @@ class CommandService
 
     private static function getArguments($command): array
     {
-        $arguments =[];
+        $arguments = [];
         foreach ($command->getDefinition()->getArguments() as $argument) {
             $arguments[] = [
                 'name' => $argument->getName(),
@@ -53,12 +53,15 @@ class CommandService
         $options = [
             'withValue' => [],
             'withoutValue' => [
-              'verbose', 'quiet', 'ansi', 'no-ansi',
+                'verbose',
+                'quiet',
+                'ansi',
+                'no-ansi',
             ]
         ];
         foreach ($command->getDefinition()->getOptions() as $option) {
             if ($option->acceptValue()) {
-                $options['withValue'][] = (object)[
+                $options['withValue'][] = (object) [
                     'name' => $option->getName(),
                     'default' => $option->getDefault(),
                     'required' => $option->isValueRequired()

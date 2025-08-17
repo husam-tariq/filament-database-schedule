@@ -6,6 +6,7 @@ use HusamTariq\FilamentDatabaseSchedule\Http\Services\CommandService;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
@@ -37,35 +38,35 @@ class ScheduleForm
                     ->required()
                     ->afterStateUpdated(function ($set, $state) {
                         $set('params', static::$commands->firstWhere('name', $state)['arguments'] ?? []);
-                        $set('options_with_value', static::$commands->firstWhere('name', $state)['options']["withValue"] ?? []);
+                        $set('options_with_value', collect(static::$commands->firstWhere('name', $state)['options']["withValue"] ?? [])->
+                            map(function ($item) {
+                                return (array) $item;
+                            })->toArray());
                     }),
                 TextInput::make('command_custom')
                     ->placeholder(__('filament-database-schedule::schedule.messages.custom-command-here'))
                     ->label(__('filament-database-schedule::schedule.messages.custom'))
                     ->required()
                     ->visible(fn($get) => $get('command') === 'custom' && config('filament-database-schedule.commands.enable_custom')),
-                Repeater::make('params')->label(__('filament-database-schedule::schedule.fields.arguments'))
+                Repeater::make('params')->label(__('filament-database-schedule::schedule.fields.arguments'))->extraAttributes(['class' => 'repeater--table-hidden-header'])
+                    ->table([
+                        TableColumn::make('value')->hiddenHeaderLabel(),
+                    ])
                     ->schema([
                         TextInput::make('value')->prefix(fn($get) => ucfirst($get('name')))->required(fn($get) => $get('required'))->hiddenLabel(),
                         Hidden::make('name'),
                     ])->addable(false)->deletable(false)->reorderable(false)
                     ->visible(fn($get) => !empty(static::$commands->firstWhere('name', $get('command'))['arguments'])),
-                Repeater::make('options_with_value')->label(__('filament-database-schedule::schedule.fields.options_with_value'))
+                Repeater::make('options_with_value')->label(__('filament-database-schedule::schedule.fields.options_with_value'))->extraAttributes(['class' => 'repeater--table-hidden-header'])
+                    ->table([
+                        TableColumn::make('value')->hiddenHeaderLabel(),
+                    ])
                     ->schema([
                         TextInput::make('value')->prefix(fn($get) => ucfirst($get('name')))->required(fn($get) => $get('required'))->hiddenLabel(),
                         Hidden::make('type')->default('string'),
                         Hidden::make('name'),
-                    ])->addable(false)->deletable(false)->reorderable(false)
-                    ->visible(function ($state) {
-                        $items = collect($state);
-                        if ($items->isEmpty()) {
-                            return false;
-                        }
-                        $first = $items->first();
-                        $value = is_array($first) ? ($first['value'] ?? null) : ($first->value ?? null);
-
-                        return !empty($value);
-                    }),
+                    ])->addable(false)->deletable(false)->reorderable(false)->default([])
+                    ->visible(fn($state) => !empty($state)),
                 CheckboxList::make('options')->label(__('filament-database-schedule::schedule.fields.options'))
                     ->options(
                         fn($get) =>
@@ -73,7 +74,7 @@ class ScheduleForm
                             ->mapWithKeys(function ($value) {
                                 return [$value => $value];
                             }),
-                    )->columns(3)->columnSpanFull()->visible(fn(CheckboxList $component) => !empty($component->getOptions())),
+                    )->columns(3)->visible(fn(CheckboxList $component) => !empty($component->getOptions())),
                 TextInput::make('expression')
                     ->placeholder('* * * * *')
                     ->rules([new Corn()])

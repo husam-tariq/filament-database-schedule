@@ -16,7 +16,10 @@ class EditSchedule extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            ViewAction::make(),
+            ViewAction::make()
+                ->icon('schedule-history')
+                ->label(__('filament-database-schedule::schedule.buttons.history'))
+                ->visible(fn($record) => $record->histories()->count()),
             DeleteAction::make(),
             ForceDeleteAction::make(),
             RestoreAction::make(),
